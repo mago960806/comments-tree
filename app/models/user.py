@@ -8,9 +8,9 @@ class User(BaseModel):
     用户模型
     """
 
-    username = Column(String, unique=True, index=True, nullable=False)
-    password = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
+    username = Column(String(20), unique=True, index=True, nullable=False)
+    password = Column(String(128), nullable=False)
+    email = Column(String(128), unique=True, index=True, nullable=False)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=True)
 

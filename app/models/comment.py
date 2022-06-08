@@ -9,7 +9,7 @@ class Comment(BaseModel):
     留言模型
     """
 
-    content = Column(Text, nullable=False)
+    content = Column(Text(200), nullable=False)
     parent_id = Column(Integer, ForeignKey("comment.id"))
     children = relationship("Comment")
 
