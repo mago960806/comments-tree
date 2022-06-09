@@ -1,16 +1,16 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from app.domain.user import User
+from app.domain import User
 
 
 class UserBaseRepository(ABC):
     """
-    User Repository 抽象基类
+    User Repository 接口
     """
 
     @abstractmethod
-    def create(self, user: User) -> Optional[User]:
+    def find(self, user: User) -> Optional[User]:
         raise NotImplementedError
 
     @abstractmethod
@@ -22,9 +22,9 @@ class UserBaseRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, user: User) -> Optional[User]:
+    def save(self, user: User) -> Optional[User]:
         raise NotImplementedError
 
     @abstractmethod
-    def delete_by_id(self, user_id: int):
+    def remove(self, user_id: int):
         raise NotImplementedError

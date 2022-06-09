@@ -1,16 +1,16 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from app.domain.comment import Comment
+from app.domain import Comment
 
 
 class CommentBaseRepository(ABC):
     """
-    Comment Repository 抽象基类
+    Comment Repository 接口
     """
 
     @abstractmethod
-    def create(self, comment: Comment) -> Optional[Comment]:
+    def find(self, comment: Comment) -> Optional[Comment]:
         raise NotImplementedError
 
     @abstractmethod
@@ -18,9 +18,9 @@ class CommentBaseRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, comment: Comment) -> Optional[Comment]:
+    def save(self, comment: Comment) -> Optional[Comment]:
         raise NotImplementedError
 
     @abstractmethod
-    def delete_by_id(self, comment_id: int):
+    def remove(self, comment_id: int):
         raise NotImplementedError
