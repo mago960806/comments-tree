@@ -1,26 +1,35 @@
+from typing import Iterator
+
 from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
 
 from app.config import settings
-from sqlalchemy.orm import declarative_base
-
 
 engine = create_engine(
     settings.DATABASE_URI,
     echo=settings.SQL_DEBUG,
     future=True,
+    # 避免 SQLite3 在多线程环境中出现错误
+    connect_args={"check_same_thread": False},
 )
 
-Session = sessionmaker(
+SessionLocal = sessionmaker(
     autocommit=False,
-    autoflush=False,
     bind=engine,
 )
 
 Base = declarative_base()
 
 
-def create_tables() -> None:
-    from app.models import User, Comment
+def get_session() -> Iterator[Session]:
+    session: Session = SessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()
 
+
+def create_tables() -> None:
     Base.metadata.create_all(bind=engine)
