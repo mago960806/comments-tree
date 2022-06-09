@@ -9,8 +9,8 @@ class Comment:
     Comment Entity
     """
 
-    id: int
     content: str
-    parent_id: int
+    id: Optional[int] = None
+    parent_id: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
