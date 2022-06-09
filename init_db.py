@@ -1,12 +1,4 @@
-from app.databases import engine, BaseModel
-from app.models import User, Comment
-
-
-def create_tables() -> None:
-    """
-    创建数据表
-    """
-    BaseModel.metadata.create_all(engine)
+from app.infrastructure.database import create_tables
 
 
 def init_data() -> None:
