@@ -5,7 +5,7 @@ from sqlalchemy import Boolean, Column, String, Integer, DateTime
 from app.infrastructure.database import Base
 
 
-class User(Base):
+class UserDTO(Base):
     """
     User DTO
     """
@@ -22,4 +22,4 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self):
-        return f"User(id={self.id!r}, username={self.username!r})"
+        return f"UserDTO(id={self.id!r}, username={self.username!r})"
