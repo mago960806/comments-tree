@@ -28,34 +28,29 @@ class CommentDO(Base):
         return f"CommentDO(id={self.id!r}, content={self.content!r}, parent_id={self.parent_id!r})"
 
     def to_entity(self) -> Comment:
-        return Comment(
-            id=self.id,
-            content=self.content,
-            parent_id=self.parent_id,
-            created_at=self.created_at,
-            updated_at=self.updated_at,
-        )
-
-    def to_read_model(self) -> CommentReadModel:
+        """
+        DO 转换成 Entity
+        """
         return get_comment_tree(self)
 
     @staticmethod
     def from_entity(comment: Comment) -> "CommentDO":
+        """
+        Entity 转换成 DO
+        """
         return CommentDO(
             id=comment.id,
             content=comment.content,
-            parent_id=comment.parent_id,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
 
 
-def get_comment_tree(comment_do: CommentDO) -> CommentReadModel:
+def get_comment_tree(comment_do: CommentDO) -> Comment:
     """
     递归获取单条评论下的子节点, 包括自身
     """
-
-    comment_tree = CommentReadModel(
+    comment_tree = Comment(
         id=comment_do.id,
         content=comment_do.content,
         created_at=comment_do.created_at,
