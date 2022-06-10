@@ -10,11 +10,7 @@ class UserBaseRepository(ABC):
     """
 
     @abstractmethod
-    def find(self, user: User) -> Optional[User]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def find_by_id(self, user_id: int) -> Optional[User]:
+    def find(self, user_id: int) -> Optional[User]:
         raise NotImplementedError
 
     @abstractmethod
