@@ -10,5 +10,8 @@ class CommentCommandUseCase(object):
 
     def create_comment(self, data: CommentCreateModel) -> Optional[CommentReadModel]:
         comment = Comment(content=data.content, parent_id=data.parent_id)
-        created_comment = self.repository.create(comment)
+        created_comment = self.repository.save(comment)
         return CommentReadModel.from_entity(created_comment)
+
+    def delete_comment(self, comment_id: int):
+        self.repository.remove(comment_id)
