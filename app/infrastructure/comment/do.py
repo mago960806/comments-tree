@@ -7,7 +7,6 @@ from sqlalchemy.orm.collections import InstrumentedList
 
 from app.domain import Comment
 from app.infrastructure.database import Base
-from app.usecase.comment import CommentReadModel
 
 
 class CommentDO(Base):

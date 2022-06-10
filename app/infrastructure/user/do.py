@@ -49,7 +49,7 @@ class UserDO(Base):
             id=user.id,
             username=user.username,
             password=user.password,
-            email=str(user.email),
+            email=user.email.value,
             is_active=user.is_active,
             is_superuser=user.is_superuser,
             created_at=user.created_at,
