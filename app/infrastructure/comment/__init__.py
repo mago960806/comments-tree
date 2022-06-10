@@ -1,2 +1,2 @@
 from .repository import CommentRepository
-from .dto import CommentDTO
+from .do import CommentDO
