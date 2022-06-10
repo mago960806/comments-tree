@@ -2,9 +2,10 @@ from typing import Optional, List
 
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm.session import Session
-
+from sqlalchemy.sql import exists
 from app.domain.user import User, UserBaseRepository
 from app.infrastructure.user.do import UserDO
+from sqlalchemy import or_
 
 
 class UserRepository(UserBaseRepository):
@@ -30,6 +31,14 @@ class UserRepository(UserBaseRepository):
             return None
         else:
             return user_do.to_entity()
+
+    def exists(self, user: User) -> bool:
+        is_user_exists = self.session.query(
+            self.session.query(UserDO)
+            .filter(or_(UserDO.username == user.username, UserDO.email == user.email.value))
+            .exists()
+        ).scalar()
+        return is_user_exists
 
     def find_all(self) -> List[User]:
         user_dos: List[UserDO] = self.session.query(UserDO).order_by(UserDO.created_at).all()

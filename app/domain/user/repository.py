@@ -17,6 +17,9 @@ class UserBaseRepository(ABC):
     def find_by_email(self, email: str) -> Optional[User]:
         raise NotImplementedError
 
+    def exists(self, user: User) -> bool:
+        raise NotImplementedError
+
     @abstractmethod
     def save(self, user: User) -> Optional[User]:
         raise NotImplementedError
