@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, status, Depends, HTTPException, Response
 from loguru import logger
 from sqlalchemy.orm.session import Session
@@ -26,6 +28,19 @@ def comment_query_usecase(session: Session = Depends(get_session)) -> CommentQue
     """
     repository: CommentRepository = CommentRepository(session)
     return CommentQueryUseCase(repository)
+
+
+@api.get("/comments", response_model=List[CommentReadModel])
+async def get_comment(
+    query_usecase: CommentQueryUseCase = Depends(comment_query_usecase),
+):
+    try:
+        comments = query_usecase.fetch_all()
+    except Exception as e:
+        logger.info(f"查询所有评论失败: {e}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"查询所有评论失败: {e}")
+    else:
+        return comments
 
 
 @api.get("/comments/{comment_id}", response_model=CommentReadModel)
