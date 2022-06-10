@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from app.domain import Comment
+from app.domain.comment import Comment
 
 
 class CommentBaseRepository(ABC):
@@ -10,11 +10,7 @@ class CommentBaseRepository(ABC):
     """
 
     @abstractmethod
-    def find(self, comment: Comment) -> Optional[Comment]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def find_by_id(self, comment_id: int) -> Optional[Comment]:
+    def find(self, comment_id: int) -> Optional[Comment]:
         raise NotImplementedError
 
     @abstractmethod
