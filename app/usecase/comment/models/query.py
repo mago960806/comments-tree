@@ -13,7 +13,7 @@ class CommentReadModel(BaseModel):
 
     id: int = Field(example=1)
     content: str = Field(example="测试评论")
-    children: List["CommentReadModel"] = []
+    children: List["CommentReadModel"] = Field(default=[])
     created_at: Optional[datetime] = Field(example=datetime(year=2022, month=6, day=8))
     updated_at: Optional[datetime] = Field(example=datetime(year=2022, month=6, day=9))
 
@@ -25,7 +25,7 @@ class CommentReadModel(BaseModel):
         return CommentReadModel(
             id=comment.id,
             content=comment.content,
-            parent_id=comment.parent_id,
+            children=comment.children,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
