@@ -11,10 +11,10 @@ class User:
     User Entity
     """
 
-    id: int
     username: str
     password: str
     email: Email
+    id: Optional[int] = None
     is_active: bool = True
     is_superuser: bool = False
     created_at: Optional[datetime] = None
