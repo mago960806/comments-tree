@@ -6,14 +6,14 @@ from typing import Optional, List
 from app.domain.comment import Comment
 
 
-class CommentReadModel(BaseModel):
+class CommentReadDTO(BaseModel):
     """
-    Comment Model 读模式(查询)
+    Comment Read Data Transfer Object
     """
 
     id: int = Field(example=1)
     content: str = Field(example="测试评论")
-    children: List["CommentReadModel"] = Field(default=[])
+    children: List["CommentReadDTO"] = Field(default=[])
     created_at: Optional[datetime] = Field(example=datetime(year=2022, month=6, day=8))
     updated_at: Optional[datetime] = Field(example=datetime(year=2022, month=6, day=9))
 
@@ -21,8 +21,8 @@ class CommentReadModel(BaseModel):
         orm_mode = True
 
     @staticmethod
-    def from_entity(comment: Comment) -> "CommentReadModel":
-        return CommentReadModel(
+    def from_entity(comment: Comment) -> "CommentReadDTO":
+        return CommentReadDTO(
             id=comment.id,
             content=comment.content,
             children=comment.children,

@@ -1,14 +1,14 @@
 from typing import Optional, List
 
 from app.domain.comment import CommentDoesNotExistError
-from app.usecase.comment.models import CommentReadModel
+from app.usecase.comment.dto import CommentReadDTO
 
 
 class CommentQueryUseCase(object):
     def __init__(self, repository: "CommentRepository"):
         self.repository = repository
 
-    def fetch_one(self, comment_id: int) -> Optional[CommentReadModel]:
+    def fetch_one(self, comment_id: int) -> Optional[CommentReadDTO]:
         try:
             comment = self.repository.find(comment_id)
             if comment is None:
@@ -17,7 +17,7 @@ class CommentQueryUseCase(object):
             raise
         return comment
 
-    def fetch_all(self) -> List[CommentReadModel]:
+    def fetch_all(self) -> List[CommentReadDTO]:
         try:
             comments = self.repository.find_all()
         except:

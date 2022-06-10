@@ -1,2 +1,2 @@
 from .usecase import CommentCommandUseCase
-from .models import CommentCreateModel, CommentReadModel, CommentUpdateModel
+from .dto import CommentCreateDTO, CommentReadDTO, CommentUpdateDTO
