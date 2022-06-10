@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm.session import Session
@@ -22,6 +22,10 @@ class CommentRepository(CommentBaseRepository):
             return None
         else:
             return comment_do.to_entity()
+
+    def find_all(self) -> List[Comment]:
+        comments: List[CommentDO] = self.session.query(CommentDO).order_by(CommentDO.created_at).all()
+        return [comment.to_entity() for comment in comments]
 
     def save(self, comment: Comment) -> Optional[Comment]:
         if not comment.id:

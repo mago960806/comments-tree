@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 
 from app.domain.comment import Comment
 
@@ -11,6 +11,9 @@ class CommentBaseRepository(ABC):
 
     @abstractmethod
     def find(self, comment_id: int) -> Optional[Comment]:
+        raise NotImplementedError
+
+    def find_all(self) -> List[Comment]:
         raise NotImplementedError
 
     @abstractmethod
