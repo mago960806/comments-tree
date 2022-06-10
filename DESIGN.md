@@ -100,7 +100,17 @@ DO 可以通过`to_entity`和`from_entity`与 Entity 进行转换。
 
 ## DTO(Data Transfer Object)
 
-主要作为 Application 层的入参和出参，比如 CQRS 里的Command、Query、Event，以及Request、Response等都属于DTO的范畴。DTO的价值在于适配不同的业务场景的入参和出参，避免让业务对象变成一个万能大对象。
+主要作为 Application 层的入参和出参，比如 CQRS 里的Command、Query、Event，以及Request、Response等都属于DTO的范畴。DTO的价值在于适配不同的业务场景的入参和出参，避免让业务对象变成一个万能大对象。例如：
+
+```python
+class CommentCreateDTO(BaseModel):
+    """
+    Comment Create Data Transfer Object
+    """
+
+    content: str = Field(min_length=3, max_length=200, example="测试评论")
+    parent_id: Optional[int] = Field(example=3)
+```
 
 ## Repository
 
