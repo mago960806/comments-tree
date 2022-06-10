@@ -24,8 +24,8 @@ class CommentRepository(CommentBaseRepository):
             return comment_do.to_entity()
 
     def find_all(self) -> List[Comment]:
-        comments: List[CommentDO] = self.session.query(CommentDO).order_by(CommentDO.created_at).all()
-        return [comment.to_entity() for comment in comments]
+        comment_dos: List[CommentDO] = self.session.query(CommentDO).order_by(CommentDO.created_at).all()
+        return [comment_do.to_entity() for comment_do in comment_dos]
 
     def save(self, comment: Comment) -> Optional[Comment]:
         if not comment.id:
