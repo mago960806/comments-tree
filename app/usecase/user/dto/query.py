@@ -6,6 +6,24 @@ from pydantic import BaseModel
 from app.domain import User
 
 
+class UserLoginDTO(BaseModel):
+    """
+    User Login Data Transfer Object
+    """
+
+    username: Optional[str] = None
+    password: str
+    email: Optional[str] = None
+
+
+class JWTTokenDTO(BaseModel):
+    """
+    JWT Token Data Transfer Object
+    """
+
+    token: str
+
+
 class UserReadDTO(BaseModel):
     """
     User Read Data Transfer Object
