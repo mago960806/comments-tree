@@ -36,6 +36,10 @@ def comment_query_usecase(session: Session = Depends(get_session)) -> CommentQue
 async def get_comments(
     query_usecase: CommentQueryUseCase = Depends(comment_query_usecase),
 ) -> List[CommentReadDTO]:
+    """
+    获取全部评论列表(未分页)
+    权限要求: 无
+    """
     try:
         comments = query_usecase.fetch_all()
     except Exception as e:
@@ -50,6 +54,10 @@ async def get_comment(
     comment_id: int,
     query_usecase: CommentQueryUseCase = Depends(comment_query_usecase),
 ) -> CommentReadDTO:
+    """
+    获取评论详情
+    权限要求: 无
+    """
     try:
         comment = query_usecase.fetch_one(comment_id)
     except CommentDoesNotExistError as e:
@@ -71,6 +79,10 @@ async def create_comment(
     command_usecase: CommentCommandUseCase = Depends(comment_command_usecase),
     current_user: UserReadDTO = Depends(get_current_user),
 ) -> CommentReadDTO:
+    """
+    创建评论
+    权限要求: 已登录的用户
+    """
     try:
         comment = command_usecase.create_comment(data)
     except Exception as e:
@@ -86,6 +98,10 @@ async def delete_comment(
     command_usecase: CommentCommandUseCase = Depends(comment_command_usecase),
     current_user: UserReadDTO = Depends(get_current_superuser),
 ):
+    """
+    创建评论
+    权限要求: 已登录的超级
+    """
     try:
         command_usecase.delete_comment(comment_id)
     except Exception as e:
