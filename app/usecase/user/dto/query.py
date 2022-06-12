@@ -11,9 +11,19 @@ class UserLoginDTO(BaseModel):
     User Login Data Transfer Object
     """
 
+    id: Optional[str] = None
     username: Optional[str] = None
     password: str
     email: Optional[str] = None
+
+    @staticmethod
+    def from_entity(user: User) -> "UserLoginDTO":
+        return UserLoginDTO(
+            id=user.id,
+            username=user.username,
+            password=user.password,
+            email=user.email.value,
+        )
 
 
 class JWTTokenDTO(BaseModel):
