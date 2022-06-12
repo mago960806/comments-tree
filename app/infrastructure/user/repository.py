@@ -24,6 +24,14 @@ class UserRepository(UserBaseRepository):
         else:
             return user_do.to_entity()
 
+    def find_by_username(self, username: str) -> Optional[User]:
+        try:
+            user_do: UserDO = self.session.query(UserDO).filter_by(username=username).one()
+        except NoResultFound:
+            return None
+        else:
+            return user_do.to_entity()
+
     def find_by_email(self, email: str) -> Optional[User]:
         try:
             user_do: UserDO = self.session.query(UserDO).filter_by(email=email).one()
