@@ -42,7 +42,7 @@ class UserRegisterDTO(BaseModel):
     _check_username = validator("username", allow_reuse=True)(check_username)
 
     @validator("password")
-    def _check_password(cls, value: Password, **kwargs):
+    def _check_password(cls, value: Password, **kwargs) -> str:
         password = value.get_secret_value()
         return check_password(password)
 

@@ -4,6 +4,7 @@ from app.domain.user import User, Email
 from app.infrastructure.user import UserRepository
 from app.usecase.user.dto import UserRegisterDTO, UserCreateDTO, UserReadDTO
 from app.domain.user import UserIsAlreadyExistsError
+from app.utils import encrypt_password
 
 
 class UserCommandUseCase(object):
@@ -13,7 +14,7 @@ class UserCommandUseCase(object):
     def register_user(self, data: UserRegisterDTO) -> Optional[UserReadDTO]:
         user = User(
             username=data.username,
-            password=data.password,
+            password=encrypt_password(str(data.password)),
             email=Email(data.email),
         )
         if self.repository.exists(user):
@@ -24,7 +25,7 @@ class UserCommandUseCase(object):
     def create_user(self, data: UserCreateDTO) -> Optional[UserReadDTO]:
         user = User(
             username=data.username,
-            password=data.password,
+            password=encrypt_password(str(data.password)),
             email=Email(data.email),
             is_active=data.is_active,
             is_superuser=data.is_superuser,
