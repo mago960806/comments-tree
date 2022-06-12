@@ -39,6 +39,11 @@ def get_current_user(
     token: str = Depends(get_authorization_from_headers),
     query_usecase: UserQueryUseCase = Depends(user_query_usecase),
 ) -> UserReadDTO:
+    """
+    通过 JWT 获取当前登录的用户
+    :param token: 通过请求头的 Authorization 字段获取 JWT
+    :param query_usecase: 查询案例
+    """
     try:
         payload: Dict[str, str] = jwt.decode(token, settings.SECRET_KEY)
     except jwt.JWTError:
@@ -55,6 +60,9 @@ def get_current_user(
 def get_current_superuser(
     current_user: UserReadDTO = Depends(get_current_user),
 ) -> UserReadDTO:
+    """
+    通过 JWT 获取当前登录的超级用户
+    """
     if not current_user.is_superuser:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="当前用户权限不足")
     return current_user
@@ -62,6 +70,10 @@ def get_current_superuser(
 
 @api.post("/login", response_model=JWTTokenDTO)
 async def login(data: UserLoginDTO, query_usecase: UserQueryUseCase = Depends(user_query_usecase)):
+    """
+    用户登录
+    权限要求: 无
+    """
     try:
         user = query_usecase.authenticate(username=data.username, email=data.email, plain_password=data.password)
     except (UserDoesNotExistError, AuthenticateError) as e:
@@ -81,6 +93,10 @@ async def register(
     data: UserRegisterDTO,
     command_usecase: UserCommandUseCase = Depends(user_command_usecase),
 ) -> UserReadDTO:
+    """
+    用户注册
+    权限要求: 无
+    """
     try:
         user = command_usecase.register_user(data)
     except UserIsAlreadyExistsError as e:
@@ -96,6 +112,10 @@ async def register(
 async def get_me(
     current_user: User = Depends(get_current_user),
 ):
+    """
+    获取当前登录用户信息
+    权限要求: 已登录的用户
+    """
     return current_user
 
 
@@ -104,6 +124,10 @@ async def get_users(
     query_usecase: UserQueryUseCase = Depends(user_query_usecase),
     current_user: UserReadDTO = Depends(get_current_superuser),
 ) -> List[UserReadDTO]:
+    """
+    获取全部用户列表(未分页)
+    权限要求: 已登录的超级用户
+    """
     try:
         users = query_usecase.fetch_all()
     except Exception as e:
@@ -119,6 +143,10 @@ async def get_user(
     query_usecase: UserQueryUseCase = Depends(user_query_usecase),
     current_user: UserReadDTO = Depends(get_current_superuser),
 ):
+    """
+    获取用户详情
+    权限要求: 已登录的超级用户
+    """
     try:
         user = query_usecase.fetch_one(user_id)
     except UserDoesNotExistError as e:
@@ -140,6 +168,10 @@ async def create_user(
     command_usecase: UserCommandUseCase = Depends(user_command_usecase),
     current_user: UserReadDTO = Depends(get_current_superuser),
 ):
+    """
+    创建用户
+    权限要求: 已登录的超级用户
+    """
     try:
         user = command_usecase.create_user(data)
     except UserIsAlreadyExistsError as e:
@@ -157,6 +189,10 @@ async def delete_user(
     command_usecase: UserCommandUseCase = Depends(user_command_usecase),
     current_user: UserReadDTO = Depends(get_current_superuser),
 ):
+    """
+    删除指定用户
+    权限要求: 已登录的超级用户
+    """
     try:
         command_usecase.delete_user(user_id)
     except Exception as e:
