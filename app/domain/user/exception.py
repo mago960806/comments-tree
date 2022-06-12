@@ -10,3 +10,10 @@ class UserIsAlreadyExistsError(Exception):
 
     def __str__(self):
         return UserIsAlreadyExistsError.message
+
+
+class AuthenticateError(Exception):
+    message = "用户名或密码不正确"
+
+    def __str__(self):
+        return AuthenticateError.message
