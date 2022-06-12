@@ -100,7 +100,7 @@ async def delete_comment(
 ):
     """
     创建评论
-    权限要求: 已登录的超级
+    权限要求: 已登录的超级用户
     """
     try:
         command_usecase.delete_comment(comment_id)
