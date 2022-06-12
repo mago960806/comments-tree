@@ -39,6 +39,7 @@ class UserReadDTO(BaseModel):
     User Read Data Transfer Object
     """
 
+    id: Optional[int] = None
     username: str
     email: str
     is_active: bool
