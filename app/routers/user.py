@@ -78,7 +78,7 @@ async def login(data: UserLoginDTO, query_usecase: UserQueryUseCase = Depends(us
         user = query_usecase.authenticate(username=data.username, email=data.email, plain_password=data.password)
     except (UserDoesNotExistError, AuthenticateError) as e:
         # 避免用户名爆破攻击, 不能直接返回真实原因
-        logger.info(f"用户登录失败: 用户名={data.username}, 原因={e.message}")
+        logger.info(f"用户登录失败: 用户名={data.username or data.email}, 原因={e.message}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="用户名或密码不正确")
     except Exception as e:
         logger.error(f"系统错误: {e}")
