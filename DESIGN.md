@@ -18,10 +18,12 @@ class Comment:
     """
 
     content: str
+    created_by: str
     id: Optional[int] = None
     parent_id: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+
 ```
 
 ## VO(Value Object)
@@ -61,15 +63,16 @@ DO 存在的目的是为了和数据库物理表格进行一一映射，不能�
 ```python
 class CommentDO(Base):
     """
-    Comment DO
+    Comment Data Object
     """
 
     __tablename__ = "comment"
 
     id = Column(Integer, primary_key=True)
     content = Column(Text(200), nullable=False)
-    parent_id = Column(Integer, ForeignKey("comment.id"))
-    children = relationship("CommentDTO")
+    parent_id = Column(Integer, ForeignKey("comment.id"), nullable=True)
+    children = relationship("CommentDO")
+    created_by = Column(String(200), nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
     updated_at = Column(DateTime(timezone=True), nullable=True)
 
@@ -77,20 +80,28 @@ class CommentDO(Base):
         return f"CommentDO(id={self.id!r}, content={self.content!r}, parent_id={self.parent_id!r})"
 
     def to_entity(self) -> Comment:
+        """
+        DO 转换成 Entity
+        """
         return Comment(
             id=self.id,
             content=self.content,
             parent_id=self.parent_id,
+            created_by=self.created_by,
             created_at=self.created_at,
             updated_at=self.updated_at,
         )
 
     @staticmethod
     def from_entity(comment: Comment) -> "CommentDO":
+        """
+        Entity 转换成 DO
+        """
         return CommentDO(
             id=comment.id,
             content=comment.content,
             parent_id=comment.parent_id,
+            created_by=comment.created_by,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
@@ -110,6 +121,7 @@ class CommentCreateDTO(BaseModel):
 
     content: str = Field(min_length=3, max_length=200, example="测试评论")
     parent_id: Optional[int] = Field(example=3)
+    created_by: Optional[str] = "匿名用户"
 ```
 
 ## Repository
@@ -132,6 +144,9 @@ class CommentBaseRepository(ABC):
     def find(self, comment_id: int) -> Optional[Comment]:
         raise NotImplementedError
 
+    def find_all(self) -> List[Comment]:
+        raise NotImplementedError
+
     @abstractmethod
     def save(self, comment: Comment) -> Optional[Comment]:
         raise NotImplementedError
@@ -139,6 +154,7 @@ class CommentBaseRepository(ABC):
     @abstractmethod
     def remove(self, comment_id: int):
         raise NotImplementedError
+
 ```
 
 Repository 实现例子如下：
@@ -159,6 +175,12 @@ class CommentRepository(CommentBaseRepository):
             return None
         else:
             return comment_do.to_entity()
+
+    def find_all(self) -> List[CommentTreeNode]:
+        comment_dos: List[CommentDO] = (
+            self.session.query(CommentDO).filter_by(parent_id=None).order_by(CommentDO.created_at)
+        )
+        return get_comments_tree(comment_dos)
 
     def save(self, comment: Comment) -> Optional[Comment]:
         if not comment.id:
@@ -186,3 +208,121 @@ class CommentRepository(CommentBaseRepository):
             self.session.commit()
 ```
 
+## UseCase
+
+UseCase 分两类，一类为 QueryUseCase，一类为 CommandUseCase，分别对应读操作和写操作的封装。
+
+UseCase 中接受 Repository 对象作为参数，将上层所需的业务场景都在此实现。例如：
+
+```python
+class CommentCommandUseCase(object):
+    def __init__(self, repository: "CommentRepository"):
+        self.repository = repository
+
+    def create_comment(self, data: CommentCreateDTO) -> Optional[CommentReadDTO]:
+        comment = Comment(content=data.content, parent_id=data.parent_id, created_by=data.created_by)
+        created_comment = self.repository.save(comment)
+        return CommentReadDTO.from_entity(created_comment)
+
+    def delete_comment(self, comment_id: int):
+        self.repository.remove(comment_id)
+```
+
+# 项目架构
+
+```
+.
+├── DESIGN.md # 设计文档
+├── README.md # 说明文档
+├── app # 项目主目录
+│   ├── __init__.py
+│   ├── config.py 
+│   ├── domain # 域对象层(Domain Layer), 包含 Entity 对象, VO 对象, Exception 对象, Repository 接口
+│   │   ├── __init__.py
+│   │   ├── comment
+│   │   │   ├── __init__.py
+│   │   │   ├── entity.py
+│   │   │   ├── exception.py
+│   │   │   └── repository.py
+│   │   └── user
+│   │       ├── __init__.py
+│   │       ├── entity.py
+│   │       ├── exception.py
+│   │       ├── repository.py
+│   │       └── vo.py
+│   ├── infrastructure # 基础架构层(Infrastructure Layer), 包含 DO 对象 和 Repository 实现
+│   │   ├── __init__.py
+│   │   ├── comment
+│   │   │   ├── __init__.py
+│   │   │   ├── do.py
+│   │   │   └── repository.py
+│   │   ├── database.py # SQLalchemy ORM 封装
+│   │   └── user
+│   │       ├── __init__.py
+│   │       ├── do.py
+│   │       └── repository.py
+│   ├── routers # 路由层(Router Layer), 包含所有 API 接口对应的 Handler 函数
+│   │   ├── __init__.py
+│   │   ├── comment.py
+│   │   └── user.py
+│   ├── tests # 单元测试
+│   │   ├── __init__.py
+│   │   ├── conftest.py # pytest 配置
+│   │   ├── routers
+│   │   │   ├── __init__.py
+│   │   │   ├── test_comment.py
+│   │   │   └── test_user.py
+│   │   ├── setup_test_db.py # 初始化测试数据库
+│   │   ├── usecase
+│   │   │   ├── __init__.py
+│   │   │   └── dto
+│   │   │       ├── __init__.py
+│   │   │       └── test_command.py
+│   │   └── utils
+│   │       ├── __init__.py
+│   │       └── test_auth.py
+│   ├── usecase # 用例层(UseCase Layer), 包含各类 DTO 和 UseCase 对象, 例如 Command, Query
+│   │   ├── __init__.py
+│   │   ├── comment
+│   │   │   ├── __init__.py
+│   │   │   ├── dto
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── command.py
+│   │   │   │   └── query.py
+│   │   │   └── usecase
+│   │   │       ├── __init__.py
+│   │   │       ├── command.py
+│   │   │       └── query.py
+│   │   └── user
+│   │       ├── __init__.py
+│   │       ├── dto
+│   │       │   ├── __init__.py
+│   │       │   ├── command.py
+│   │       │   └── query.py
+│   │       └── usecase
+│   │           ├── __init__.py
+│   │           ├── command.py
+│   │           └── query.py
+│   └── utils # 工具函数
+│       ├── __init__.py
+│       └── auth.py # 认证相关函数
+├── init_db.py # 数据库初始化脚本
+├── poetry.lock # 依赖版本管理文件
+├── pyproject.toml # 项目信息文件
+├── requirements.txt # 项目依赖
+├── server.py # 程序入口
+```
+
+## 其他说明
+
+###  开发
+
+启动开发模式, 可通过执行`python server.py`。
+
+### 接口文档
+
+在项目运行后可访问 http://127.0.0.1:8000/docs 获取基于 OpenAPI 的接口文档。
+
+### 测试
+
+本项目使用 pytest 作为单元测试框架，启动测试只需要执行`pytest`即可
