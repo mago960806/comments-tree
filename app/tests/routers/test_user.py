@@ -120,6 +120,8 @@ def test_get_me(normal_user_token_in_headers):
 
 
 def test_delete_user(superuser_token_in_headers):
-    user_id = 4
+    data = {"username": "user04", "password": "User@123", "email": "user04@devops.com"}
+    response = client.post("/api/v1/users", json=data, headers=superuser_token_in_headers)
+    user_id = response.json()["id"]
     response = client.delete(f"/api/v1/users/{user_id}", headers=superuser_token_in_headers)
     assert response.status_code == 204
