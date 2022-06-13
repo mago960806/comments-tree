@@ -14,6 +14,7 @@ class CommentReadDTO(BaseModel):
     id: int
     content: str
     parent_id: Optional[int] = None
+    created_by: str
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -23,6 +24,7 @@ class CommentReadDTO(BaseModel):
             id=comment.id,
             content=comment.content,
             parent_id=comment.parent_id,
+            created_by=comment.created_by,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
@@ -36,6 +38,7 @@ class CommentTreeNodeDTO(BaseModel):
     id: int
     content: str
     children: List["CommentTreeNodeDTO"] = []
+    created_by: str
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -44,6 +47,7 @@ class CommentTreeNodeDTO(BaseModel):
         comment_tree_dto = CommentTreeNodeDTO(
             id=comment.id,
             content=comment.content,
+            created_by=comment.created_by,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )

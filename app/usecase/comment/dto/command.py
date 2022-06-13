@@ -10,6 +10,7 @@ class CommentCreateDTO(BaseModel):
 
     content: str = Field(min_length=3, max_length=200, example="测试评论")
     parent_id: Optional[int] = Field(example=3)
+    created_by: Optional[str] = "匿名用户"
 
 
 class CommentUpdateDTO(BaseModel):

@@ -86,6 +86,7 @@ async def create_comment(
     创建评论
     权限要求: 已登录的用户
     """
+    data.created_by = f"{current_user.username}({current_user.email})"
     try:
         comment = command_usecase.create_comment(data)
     except Exception as e:

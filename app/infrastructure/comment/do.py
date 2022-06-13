@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy import Column, Integer, DateTime, String
 from sqlalchemy import Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.collections import InstrumentedList
@@ -21,6 +21,7 @@ class CommentDO(Base):
     content = Column(Text(200), nullable=False)
     parent_id = Column(Integer, ForeignKey("comment.id"), nullable=True)
     children = relationship("CommentDO")
+    created_by = Column(String(200), nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
     updated_at = Column(DateTime(timezone=True), nullable=True)
 
@@ -35,6 +36,7 @@ class CommentDO(Base):
             id=self.id,
             content=self.content,
             parent_id=self.parent_id,
+            created_by=self.created_by,
             created_at=self.created_at,
             updated_at=self.updated_at,
         )
@@ -48,6 +50,7 @@ class CommentDO(Base):
             id=comment.id,
             content=comment.content,
             parent_id=comment.parent_id,
+            created_by=comment.created_by,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
@@ -69,6 +72,7 @@ def get_comment_tree(comment_do: CommentDO) -> CommentTreeNode:
     comment_tree = CommentTreeNode(
         id=comment_do.id,
         content=comment_do.content,
+        created_by=comment_do.created_by,
         created_at=comment_do.created_at,
         updated_at=comment_do.updated_at,
     )

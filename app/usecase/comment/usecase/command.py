@@ -9,7 +9,7 @@ class CommentCommandUseCase(object):
         self.repository = repository
 
     def create_comment(self, data: CommentCreateDTO) -> Optional[CommentReadDTO]:
-        comment = Comment(content=data.content, parent_id=data.parent_id)
+        comment = Comment(content=data.content, parent_id=data.parent_id, created_by=data.created_by)
         created_comment = self.repository.save(comment)
         return CommentReadDTO.from_entity(created_comment)
 

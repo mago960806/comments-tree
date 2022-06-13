@@ -10,6 +10,7 @@ class Comment:
     """
 
     content: str
+    created_by: str
     id: Optional[int] = None
     parent_id: Optional[int] = None
     created_at: Optional[datetime] = None
@@ -23,6 +24,7 @@ class CommentTreeNode:
     """
 
     content: str
+    created_by: str
     id: Optional[int] = None
     children: List["CommentTreeNode"] = field(default_factory=lambda: [])
     created_at: Optional[datetime] = None
