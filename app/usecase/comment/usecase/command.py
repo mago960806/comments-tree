@@ -1,7 +1,7 @@
 from typing import Optional
 
 from app.domain.comment import Comment
-from app.usecase.comment.dto import CommentCreateDTO, CommentReadDTO
+from app.usecase.comment.dto import CommentReadDTO, CommentCreateDTO
 
 
 class CommentCommandUseCase(object):

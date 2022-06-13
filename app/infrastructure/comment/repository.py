@@ -3,8 +3,8 @@ from typing import Optional, List
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm.session import Session
 
-from app.domain.comment import CommentBaseRepository, Comment
-from app.infrastructure.comment.do import CommentDO
+from app.domain.comment import CommentBaseRepository, Comment, CommentTreeNode
+from app.infrastructure.comment.do import CommentDO, get_comments_tree
 
 
 class CommentRepository(CommentBaseRepository):
@@ -23,9 +23,11 @@ class CommentRepository(CommentBaseRepository):
         else:
             return comment_do.to_entity()
 
-    def find_all(self) -> List[Comment]:
-        comment_dos: List[CommentDO] = self.session.query(CommentDO).order_by(CommentDO.created_at).all()
-        return [comment_do.to_entity() for comment_do in comment_dos]
+    def find_all(self) -> List[CommentTreeNode]:
+        comment_dos: List[CommentDO] = (
+            self.session.query(CommentDO).filter_by(parent_id=None).order_by(CommentDO.created_at)
+        )
+        return get_comments_tree(comment_dos)
 
     def save(self, comment: Comment) -> Optional[Comment]:
         if not comment.id:

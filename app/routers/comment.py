@@ -9,6 +9,7 @@ from app.infrastructure.comment import CommentRepository
 from app.infrastructure.database import get_session
 from app.usecase.comment import CommentCommandUseCase
 from app.usecase.comment import CommentCreateDTO, CommentReadDTO
+from app.usecase.comment.dto import CommentTreeNodeDTO
 from app.usecase.comment.usecase import CommentQueryUseCase
 from app.usecase.user import UserReadDTO
 from .user import get_current_user, get_current_superuser
@@ -32,21 +33,23 @@ def comment_query_usecase(session: Session = Depends(get_session)) -> CommentQue
     return CommentQueryUseCase(repository)
 
 
-@api.get("/comments", response_model=List[CommentReadDTO])
+@api.get("/comments", response_model=List[CommentTreeNodeDTO])
 async def get_comments(
     query_usecase: CommentQueryUseCase = Depends(comment_query_usecase),
-) -> List[CommentReadDTO]:
+) -> List[CommentTreeNodeDTO]:
     """
     获取全部评论列表(未分页)
     权限要求: 无
     """
-    try:
-        comments = query_usecase.fetch_all()
-    except Exception as e:
-        logger.info(f"查询所有评论失败: {e}")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"查询所有评论失败")
-    else:
-        return comments
+    comments = query_usecase.fetch_all()
+    return comments
+    # try:
+    #     comments = query_usecase.fetch_all()
+    # except Exception as e:
+    #     logger.info(f"查询所有评论失败: {e}")
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"查询所有评论失败")
+    # else:
+    #     return comments
 
 
 @api.get("/comments/{comment_id}", response_model=CommentReadDTO)

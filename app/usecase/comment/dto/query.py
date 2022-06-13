@@ -1,9 +1,9 @@
 from datetime import datetime
-
-from pydantic import BaseModel, Field
 from typing import Optional, List
 
-from app.domain.comment import Comment
+from pydantic import BaseModel
+
+from app.domain.comment import Comment, CommentTreeNode
 
 
 class CommentReadDTO(BaseModel):
@@ -11,21 +11,43 @@ class CommentReadDTO(BaseModel):
     Comment Read Data Transfer Object
     """
 
-    id: int = Field(example=1)
-    content: str = Field(example="测试评论")
-    children: List["CommentReadDTO"] = Field(default=[])
-    created_at: Optional[datetime] = Field(example=datetime(year=2022, month=6, day=8))
-    updated_at: Optional[datetime] = Field(example=datetime(year=2022, month=6, day=9))
-
-    class Config:
-        orm_mode = True
+    id: int
+    content: str
+    parent_id: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     @staticmethod
     def from_entity(comment: Comment) -> "CommentReadDTO":
         return CommentReadDTO(
             id=comment.id,
             content=comment.content,
-            children=comment.children,
+            parent_id=comment.parent_id,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
+
+
+class CommentTreeNodeDTO(BaseModel):
+    """
+    Comment Tree Node Data Transfer Object
+    """
+
+    id: int
+    content: str
+    children: List["CommentTreeNodeDTO"] = []
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    @staticmethod
+    def from_entity(comment: CommentTreeNode) -> "CommentTreeNodeDTO":
+        comment_tree_dto = CommentTreeNodeDTO(
+            id=comment.id,
+            content=comment.content,
+            created_at=comment.created_at,
+            updated_at=comment.updated_at,
+        )
+        children: List[CommentTreeNode] = comment.children
+        if children:
+            comment_tree_dto.children = [CommentTreeNodeDTO.from_entity(child) for child in children]
+        return comment_tree_dto

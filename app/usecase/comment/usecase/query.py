@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from app.domain.comment import CommentDoesNotExistError
-from app.usecase.comment.dto import CommentReadDTO
+from app.usecase.comment.dto import CommentReadDTO, CommentTreeNodeDTO
 
 
 class CommentQueryUseCase(object):
@@ -15,11 +15,11 @@ class CommentQueryUseCase(object):
                 raise CommentDoesNotExistError
         except:
             raise
-        return comment
+        return CommentReadDTO.from_entity(comment)
 
-    def fetch_all(self) -> List[CommentReadDTO]:
+    def fetch_all(self) -> List[CommentTreeNodeDTO]:
         try:
             comments = self.repository.find_all()
         except:
             raise
-        return comments
+        return [CommentTreeNodeDTO.from_entity(comment) for comment in comments]

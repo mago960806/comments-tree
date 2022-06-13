@@ -1,11 +1,12 @@
 from datetime import datetime
+from typing import List
 
 from sqlalchemy import Column, Integer, DateTime
 from sqlalchemy import Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.collections import InstrumentedList
 
-from app.domain import Comment
+from app.domain.comment import Comment, CommentTreeNode
 from app.infrastructure.database import Base
 
 
@@ -18,7 +19,7 @@ class CommentDO(Base):
 
     id = Column(Integer, primary_key=True)
     content = Column(Text(200), nullable=False)
-    parent_id = Column(Integer, ForeignKey("comment.id"))
+    parent_id = Column(Integer, ForeignKey("comment.id"), nullable=True)
     children = relationship("CommentDO")
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
     updated_at = Column(DateTime(timezone=True), nullable=True)
@@ -30,7 +31,13 @@ class CommentDO(Base):
         """
         DO 转换成 Entity
         """
-        return get_comment_tree(self)
+        return Comment(
+            id=self.id,
+            content=self.content,
+            parent_id=self.parent_id,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
 
     @staticmethod
     def from_entity(comment: Comment) -> "CommentDO":
@@ -40,16 +47,26 @@ class CommentDO(Base):
         return CommentDO(
             id=comment.id,
             content=comment.content,
+            parent_id=comment.parent_id,
             created_at=comment.created_at,
             updated_at=comment.updated_at,
         )
 
 
-def get_comment_tree(comment_do: CommentDO) -> Comment:
+def get_comments_tree(comment_dos: List[CommentDO]) -> List[CommentTreeNode]:
+    """
+    获取整个评论树及其子节点
+    :param comment_dos: parent_id 为 None 的 CommentDo 列表
+    :return: List[CommentTreeNode]
+    """
+    return [get_comment_tree(comment_do) for comment_do in comment_dos]
+
+
+def get_comment_tree(comment_do: CommentDO) -> CommentTreeNode:
     """
     递归获取单条评论下的子节点, 包括自身
     """
-    comment_tree = Comment(
+    comment_tree = CommentTreeNode(
         id=comment_do.id,
         content=comment_do.content,
         created_at=comment_do.created_at,
