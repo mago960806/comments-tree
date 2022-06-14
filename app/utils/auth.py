@@ -19,9 +19,9 @@ def get_authorization_from_headers(request: Request) -> str:
     # refer https://jwt.io/introduction/
     authorization: str = request.headers.get("Authorization")
     if not authorization:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="无认证凭证, 请检查请求头中的 Authorization 字段")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="无认证凭证")
     if "Bearer" not in authorization:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="认证凭证格式错误, Bearer <JWTToken>")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="认证凭证格式错误, Bearer <JWTToken>")
     token = authorization.removeprefix("Bearer ")
     return token
 

@@ -47,13 +47,13 @@ def get_current_user(
     try:
         payload: Dict[str, str] = jwt.decode(token, settings.SECRET_KEY)
     except jwt.JWTError:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Token已失效")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token已失效")
     try:
         user = query_usecase.fetch_one(user_id=int(payload.get("sub")))
     except UserDoesNotExistError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=e.message)
     if not user.is_active:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="用户未激活")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="用户未激活")
     return user
 
 
