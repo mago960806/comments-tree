@@ -23,3 +23,6 @@ class CommentQueryUseCase(object):
         except:
             raise
         return [CommentTreeNodeDTO.from_entity(comment) for comment in comments]
+
+    def count(self) -> int:
+        return self.repository.count()

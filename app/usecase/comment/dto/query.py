@@ -6,6 +6,14 @@ from pydantic import BaseModel
 from app.domain.comment import Comment, CommentTreeNode
 
 
+class CommentCountDTO(BaseModel):
+    """
+    Comment Count Transfer Object
+    """
+
+    count: int
+
+
 class CommentReadDTO(BaseModel):
     """
     Comment Read Data Transfer Object

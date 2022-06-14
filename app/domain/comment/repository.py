@@ -23,3 +23,7 @@ class CommentBaseRepository(ABC):
     @abstractmethod
     def remove(self, comment_id: int):
         raise NotImplementedError
+
+    @abstractmethod
+    def count(self) -> int:
+        raise NotImplementedError

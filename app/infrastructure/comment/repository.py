@@ -25,7 +25,7 @@ class CommentRepository(CommentBaseRepository):
 
     def find_all(self) -> List[CommentTreeNode]:
         comment_dos: List[CommentDO] = (
-            self.session.query(CommentDO).filter_by(parent_id=None).order_by(CommentDO.created_at)
+            self.session.query(CommentDO).filter_by(parent_id=None).order_by(CommentDO.created_at.desc())
         )
         return get_comments_tree(comment_dos)
 
@@ -53,3 +53,6 @@ class CommentRepository(CommentBaseRepository):
         else:
             self.session.delete(comment_do)
             self.session.commit()
+
+    def count(self) -> int:
+        return self.session.query(CommentDO).count()

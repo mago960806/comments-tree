@@ -10,6 +10,7 @@ from app.infrastructure.database import get_session
 from app.usecase.comment import CommentCommandUseCase
 from app.usecase.comment import CommentCreateDTO, CommentReadDTO
 from app.usecase.comment.dto import CommentTreeNodeDTO
+from app.usecase.comment.dto.query import CommentCountDTO
 from app.usecase.comment.usecase import CommentQueryUseCase
 from app.usecase.user import UserReadDTO
 from .user import get_current_user, get_current_superuser
@@ -112,3 +113,15 @@ async def delete_comment(
         logger.info(f"删除评论失败: {e}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="删除评论失败")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@api.get("/comments/count/", response_model=CommentCountDTO)
+async def get_comment_count(
+    query_usecase: CommentQueryUseCase = Depends(comment_query_usecase),
+):
+    """
+    获取评论条数
+    权限要求: 无
+    """
+    count = query_usecase.count()
+    return {"count": count}
