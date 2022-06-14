@@ -317,7 +317,12 @@ class CommentCommandUseCase(object):
 
 ### 初次使用
 
-初次使用需要在项目目录下创建一个`.env`文件，写入以下配置。
+1. 创建虚拟环境：python3 -m venv venv
+
+2. 激活虚拟环境：source venv/bin/activate
+3. 安装依赖：pip install -r requirements.txt
+4. 创建配置文件：touch .env
+5. 写入以下配置：
 
 ```ini
 # DEBUG 模式
