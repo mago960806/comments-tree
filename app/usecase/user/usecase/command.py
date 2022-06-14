@@ -16,6 +16,7 @@ class UserCommandUseCase(object):
             username=data.username,
             password=encrypt_password(str(data.password)),
             email=Email(data.email),
+            created_at=data.created_at,
         )
         if self.repository.exists(user):
             raise UserIsAlreadyExistsError
@@ -27,6 +28,7 @@ class UserCommandUseCase(object):
             username=data.username,
             password=encrypt_password(str(data.password)),
             email=Email(data.email),
+            created_at=data.created_at,
             is_active=data.is_active,
             is_superuser=data.is_superuser,
         )

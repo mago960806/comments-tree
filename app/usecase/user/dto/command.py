@@ -1,5 +1,6 @@
 import re
 import string
+from datetime import datetime
 
 from pydantic import BaseModel, Field, validator, SecretStr as Password, EmailStr as Email
 
@@ -38,6 +39,7 @@ class UserRegisterDTO(BaseModel):
     username: str = Field(min_length=5, max_length=20, example="admin")
     password: Password = Field(min_length=8, max_length=20, example="Admin@123")
     email: Email
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
     _check_username = validator("username", allow_reuse=True)(check_username)
 

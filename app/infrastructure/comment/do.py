@@ -22,7 +22,7 @@ class CommentDO(Base):
     parent_id = Column(Integer, ForeignKey("comment.id"), nullable=True)
     children = relationship("CommentDO")
     created_by = Column(String(200), nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
+    created_at = Column(DateTime(timezone=True), nullable=False)
     updated_at = Column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self):
