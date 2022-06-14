@@ -4,7 +4,7 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     DEBUG: bool = False
     SERVER_HOST: str = "localhost"
-    SERVER_PORT: int = 5000
+    SERVER_PORT: int = 8000
     # 数据库配置
     DATABASE_URI: str = "sqlite:///db.sqlite3"
     SQL_DEBUG: bool = False
