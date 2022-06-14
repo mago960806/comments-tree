@@ -315,9 +315,32 @@ class CommentCommandUseCase(object):
 
 ## 其他说明
 
+### 初次使用
+
+初次使用需要在项目目录下创建一个`.env`文件，写入以下配置。
+
+```ini
+# DEBUG 模式
+DEBUG=true
+SQL_DEBUG=false
+
+# 监听端口
+SERVER_HOST=127.0.0.1
+SERVER_PORT=8000
+
+# 数据库配置
+DATABASE_URI=sqlite:///sqlite3.db
+
+# 认证配置
+SECRET_KEY=e8aac33715c3a12ebb831a943ced8459e295bde9b965a9283c34143c158b6c56
+ACCESS_TOKEN_EXPIRE_MINUTES=43200
+```
+
 ###  开发
 
 启动开发模式, 可通过执行`python server.py`。
+
+然后访问 http://127.0.0.1:8000/web/ 即可访问到前端。
 
 ### 接口文档
 
