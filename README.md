@@ -1,7 +1,7 @@
 # 前言
 
 ## 介绍
-本项目是本人在面某远程工作岗位所接到的笔试题，笔试题本身没有什么难度，但我结合 [`DDD(Domain-Driven Design)`](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)和[`CQRS(Command and Query Responsibility Segregation)`](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs) 这两种设计模式对这个项目进行了编写，最终落地了 DDD 的部分概念，详情可以参考[设计文档](https://github.com/mago960806/comments-tree/DESIGN.md)
+本项目是本人在面某远程工作岗位所接到的笔试题，笔试题本身没有什么难度，但我结合 [`DDD(Domain-Driven Design)`](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)和[`CQRS(Command and Query Responsibility Segregation)`](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs) 这两种设计模式对这个项目进行了编写，最终落地了 DDD 的部分概念，详情可以参考[设计文档](https://github.com/mago960806/comments-tree/blob/main/DESIGN.md)
 
 # 笔试题
 
