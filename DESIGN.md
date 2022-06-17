@@ -341,6 +341,10 @@ SECRET_KEY=e8aac33715c3a12ebb831a943ced8459e295bde9b965a9283c34143c158b6c56
 ACCESS_TOKEN_EXPIRE_MINUTES=43200
 ```
 
+6. 运行数据库初始化脚本：python init_db.py
+7. 启动项目：python server.py
+8. 打开浏览器访问：http://127.0.0.1:8000/web/ 
+
 ###  开发
 
 启动开发模式, 可通过执行`python server.py`。

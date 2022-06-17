@@ -1,23 +1,18 @@
-# web+数据库题目2：无限层级留言
+# 前言
 
-## 难度
+## 介绍
+本项目是本人在面某远程工作岗位所接到的笔试题，笔试题本身没有什么难度，但我结合 [`DDD(Domain-Driven Design)`](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)和[`CQRS(Command and Query Responsibility Segregation)`](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs) 这两种设计模式对这个项目进行了编写，最终落地了 DDD 的部分概念，详情可以参考[设计文档](https://github.com/mago960806/comments-tree/DESIGN.md)
 
-普通
+# 笔试题
 
-## 思路：
+## 题目标题
+评论树
 
-做一个简单网站实现某种简单但略有难度的功能；用到数据库；有注册登录功能；前后端分离，Python提供restful api，可使用流行框架；前端使用任一前端框架。
+## 题目内容
 
-## 注意
+使用Python+数据库，做一个简单的“树形留言”网站。难点可能在“无限层级”，由于可以无限嵌套，在数据库设计、ORM/SQL查询、以及页面展示上都需要一定经验。同时也需要考察候选人基本的用户注册/登录功能，主要是对用户密码的处理、字段的验证、浏览器 session/cookie 的应用等技能。由于现在前后端分离已经是常态，要求 Python 后端提供RESTFul API，前端页面可以使用任一种前端 JS 框架（包含但不限于jquery/react/vue/angular等）
 
-这道题目主要考察后端。虽然需要写前端页面，但是并不考察，只要能用即可。
-
-
-## 题目内容：
-
-使用Python+数据库，做一个简单的“树形留言”网站。难点可能在“无限层级”，由于可以无限嵌套，在数据库设计、ORM/SQL查询、以及页面展示上都需要一定经验。同时也需要考察候选人基本的用户注册/登录功能，主要是对用户密码的处理、字段的验证、浏览器session/cookie的应用等技能。由于现在前后端分离已经是常态，要求Python后端提供Restful api，前端页面可以使用任一种前端框架（包含但不限于jquery/react/vue/angular等）
-
-## 功能需求：
+## 功能需求
 
 - 用户可以在网站上注册
   - 需要填写 username, password, email。
@@ -46,23 +41,13 @@
   - 某个留言旁边可以看到发布者用户名和发表时间
   - 查看留言时不需要登录
 
-## 技术需求：
+## 技术需求
 
 - 提供一条命令进行网站的初始化、启动等功能，最终可以在浏览器中自动打开网站首页
-- Python框架使用Flask
+- Python的 Web 框架使用 Flask 或 FastAPI
 - 使用数据库（关系数据库或NoSQL），自行建表，使用SQL/NO-SQL/ORM等。为了Review方便，推荐使用较简单的文件式数据库（如sqlite等），不需要安装
 - 用户注册时，密码保存到数据库里不能使用明文，需要某种形式的不可逆加密。
-- 可以使用ORM或者原生SQL等方式使用数据库查询
-- 后端提供的Restful API，需要考虑到权限检查，以及正确的http method和http code
+- 可以使用 ORM 或者原生 SQL 等方式进行数据库查询
+- 后端提供的 RESTFul API，需要考虑到权限检查，以及正确的HTTP Method和HTTP Status Code
 - 对于较大层数的嵌套留言（超过50层），不会出现明显的性能问题
 - 有恰当的单元测试
-
-## 如何Clone和提交代码
-
-1. 使用ssh的方式直接clone本仓库
-   1. 不支持fork，请直接clone
-   2. git url不要使用https协议，请使用`git`协议
-   3. 同样，clone时不支持用户名密码验证，需要使用密钥
-2. 在本地新建一个分支，并在该分支上开发
-3. push该分支，并创建一个PR
-
